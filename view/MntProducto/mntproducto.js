@@ -7,6 +7,15 @@ function init(){
 }
 
 $(document).ready(function(){
+
+    $('#cat_id').select2({
+        dropdownParent: $("#modalmantenimiento")
+    });
+
+    $.post("../../controller/categoria.php?op=combo", function(data){
+        $("#cat_id").html(data);
+    });
+
     tabla=$('#productos_data').dataTable({
         "aProcessing": true,
         "aServerSide": true,
@@ -86,8 +95,10 @@ function editar(prod_id){
     $.post("../../controller/producto.php?op=mostrar", {prod_id:prod_id}, function(data){
         data = JSON.parse(data);
         $('#prod_id').val(data.prod_id);
+        $('#cat_id').val(data.cat_id).trigger('change');
         $('#prod_nom').val(data.prod_nom);
         $('#prod_descrip').val(data.prod_descrip);
+        $('#prod_cant').val(data.prod_cant);
     });
 
     $('#modalmantenimiento').modal('show');
@@ -120,6 +131,7 @@ function eliminar(prod_id){
 
 $(document).on("click", "#btnnuevo", function(){
     $('#mdltitulo').html('Nuevo Registro');
+    $('#cat_id').val('').trigger('change');
     $('#producto_form')[0].reset();
     $('#prod_id').val('');
     
